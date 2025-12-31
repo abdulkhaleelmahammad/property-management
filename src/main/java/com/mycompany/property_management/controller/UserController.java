@@ -2,6 +2,7 @@ package com.mycompany.property_management.controller;
 
 import com.mycompany.property_management.dto.UserDTO;
 import com.mycompany.property_management.service.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         userDTO = userService.register(userDTO);
-        //System.out.println(propertyDTO);
-        ResponseEntity<UserDTO> responseEntity = new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
 
-        return responseEntity;
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO){
+        userDTO = userService.login(userDTO.getOwnerEmail(),userDTO.getPassword());
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 }
