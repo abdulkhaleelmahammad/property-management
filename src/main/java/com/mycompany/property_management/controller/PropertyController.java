@@ -1,6 +1,7 @@
 package com.mycompany.property_management.controller;
 
 import com.mycompany.property_management.dto.PropertyDTO;
+import com.mycompany.property_management.dto.UserDTO;
 import com.mycompany.property_management.service.PropertyService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,6 @@ public class PropertyController {
     @PostMapping("/properties")
     public ResponseEntity<PropertyDTO> saveProperty(@RequestBody PropertyDTO propertyDTO) {
         propertyService.saveProperty(propertyDTO);
-        //System.out.println(propertyDTO);
         ResponseEntity<PropertyDTO> responseEntity = new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
 
         return responseEntity;
@@ -36,6 +36,15 @@ public class PropertyController {
     @GetMapping("/properties")
     public ResponseEntity<List<PropertyDTO>> getAllProperties() {
         List<PropertyDTO> propertyDTOList = propertyService.getAllProperties();
+
+        ResponseEntity<List<PropertyDTO>> responseEntites = new ResponseEntity<>(propertyDTOList, HttpStatus.OK);
+
+        return responseEntites;
+    }
+    @GetMapping("/properties/users/{userId}")
+    public ResponseEntity<List<PropertyDTO>> getAllPropertiesByUser(@PathVariable Long userId) {
+
+        List<PropertyDTO> propertyDTOList = propertyService.getAllPropertiesByUser(userId);
 
         ResponseEntity<List<PropertyDTO>> responseEntites = new ResponseEntity<>(propertyDTOList, HttpStatus.OK);
 

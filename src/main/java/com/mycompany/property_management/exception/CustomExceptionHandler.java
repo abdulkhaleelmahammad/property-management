@@ -1,5 +1,7 @@
 package com.mycompany.property_management.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorModel>> handleFieldValidation(MethodArgumentNotValidException manv){
@@ -31,7 +35,12 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<List<ErrorModel>> handleBusinessException(BusinessException businessException){
-        //System.out.println("Throws Business Exception");
+        for(ErrorModel err: businessException.getErrors()) {
+            logger.debug("Business exception is thrown - level - debug: {} - {}", err.getCode(), err.getMessage());
+            logger.info("Business exception is thrown - level - info: {} - {}", err.getCode(), err.getMessage());
+            logger.warn("Business exception is thrown - level - warn: {} - {}", err.getCode(), err.getMessage());
+            logger.error("Business exception is thrown - level - error: {} - {}", err.getCode(), err.getMessage());
+        }
         return new ResponseEntity<List<ErrorModel>>(businessException.getErrors(), HttpStatus.BAD_REQUEST);
     }
 }
